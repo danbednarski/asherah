@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install)",
+      "Bash(npm start)",
+      "Bash(brew:*)",
+      "Bash(export:*)",
+      "Bash(/opt/homebrew/opt/postgresql@15/bin/createdb:*)",
+      "Bash(node:*)",
+      "Bash(npm install:*)",
+      "Bash(/opt/homebrew/opt/postgresql@15/bin/psql onion_search -c \"SELECT COUNT(*) as domains FROM domains; SELECT COUNT(*) as pages FROM pages; SELECT COUNT(*) as links FROM links; SELECT status, COUNT(*) FROM crawl_queue GROUP BY status;\")",
+      "Bash(/opt/homebrew/opt/postgresql@15/bin/psql:*)",
+      "Bash(rm:*)",
+      "Bash(timeout 90 npm start)",
+      "Bash(timeout 60 npm start)",
+      "Bash(timeout 120 npm start)",
+      "Bash(curl:*)",
+      "Bash(pkill:*)",
+      "Bash(npm run api:*)",
+      "Bash(cp:*)",
+      "Bash(cat:*)",
+      "Bash(timeout:*)",
+      "Bash(grep:*)"
+    ],
+    "deny": []
+  }
+}

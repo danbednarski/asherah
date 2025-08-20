@@ -1,0 +1,135 @@
+2025-08-03T01:27:50.736Z INFO [worker-9]  Worker started
+2025-08-03T01:31:09.304Z INFO [worker-9]  Worker started
+2025-08-03T01:33:02.361Z INFO [worker-9]  Worker shutdown complete
+2025-08-03T01:35:23.603Z INFO [worker-9]  Worker started
+2025-08-03T01:35:23.633Z ERROR [worker-9]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T01:35:27.636Z ERROR [worker-9]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T01:35:31.638Z ERROR [worker-9]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T01:35:35.640Z ERROR [worker-9]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T01:35:39.641Z ERROR [worker-9]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T01:35:43.643Z ERROR [worker-9]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T01:35:47.645Z ERROR [worker-9]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T01:35:51.649Z ERROR [worker-9]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T01:35:55.652Z ERROR [worker-9]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T01:35:59.654Z ERROR [worker-9]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T01:36:03.660Z ERROR [worker-9]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T01:36:07.662Z ERROR [worker-9]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T01:36:11.664Z ERROR [worker-9]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T01:36:15.667Z ERROR [worker-9]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T01:36:19.671Z ERROR [worker-9]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T01:36:23.675Z ERROR [worker-9]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T01:36:27.680Z ERROR [worker-9]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T01:36:31.693Z ERROR [worker-9]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T01:36:35.694Z ERROR [worker-9]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T01:36:39.696Z ERROR [worker-9]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T01:36:43.697Z ERROR [worker-9]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T01:36:47.699Z ERROR [worker-9]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T01:36:51.704Z ERROR [worker-9]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T01:37:13.251Z INFO [worker-9]  Worker started
+2025-08-03T01:39:32.633Z INFO [worker-9]  Worker started
+2025-08-03T01:43:31.099Z INFO [worker-9]  Processing batch of 3 URLs
+2025-08-03T01:43:31.131Z INFO [worker-9] [http://darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion/proton] Domain darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion locked by another worker, skipping
+2025-08-03T01:43:31.139Z INFO [worker-9] [http://darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion/propublica] Domain darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion locked by another worker, skipping
+2025-08-03T01:43:31.142Z INFO [worker-9] [http://darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion/njalla] 🔒 Acquired lock for domain: darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion
+2025-08-03T01:43:31.142Z ERROR [worker-9] [http://darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion/njalla] ❌ Crawl failed for domain: darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion ERROR: inconsistent types deduced for parameter $2
+2025-08-03T01:43:31.144Z ERROR [worker-9]  Worker batch error ERROR: inconsistent types deduced for parameter $2
+2025-08-03T01:44:29.066Z INFO [worker-9]  Worker started
+2025-08-03T01:46:12.825Z INFO [worker-9]  Worker started
+2025-08-03T01:49:17.241Z INFO [worker-9]  Worker started
+2025-08-03T01:51:39.311Z INFO [worker-9]  Worker started
+2025-08-03T01:53:49.025Z INFO [worker-9]  Worker started
+2025-08-03T01:55:19.309Z INFO [worker-9]  Worker started
+2025-08-03T01:57:37.869Z INFO [worker-9]  Worker started
+2025-08-03T02:00:12.974Z INFO [worker-9]  Worker started
+2025-08-03T02:00:21.024Z INFO [worker-9]  Processing batch of 3 URLs
+2025-08-03T02:00:21.026Z INFO [worker-9] [http://darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion/cryptostamps] Domain darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion locked by another worker, skipping
+2025-08-03T02:00:21.027Z INFO [worker-9] [http://darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion/captcha/cia] Domain darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion locked by another worker, skipping
+2025-08-03T02:00:21.030Z INFO [worker-9] [http://darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion/captcha/dread] Domain darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion locked by another worker, skipping
+2025-08-03T02:04:08.562Z INFO [worker-9]  Worker started
+2025-08-03T02:13:23.109Z INFO [worker-9]  Worker shutdown complete
+2025-08-03T02:13:25.629Z INFO [worker-9]  Worker started
+2025-08-03T02:13:51.425Z INFO [worker-9]  Worker shutdown complete
+2025-08-03T02:13:54.093Z INFO [worker-9]  Worker started
+2025-08-03T02:13:56.600Z INFO [worker-9]  Worker shutdown complete
+2025-08-03T02:13:59.015Z INFO [worker-9]  Worker started
+2025-08-03T02:27:39.435Z INFO [worker-9]  Worker started
+2025-08-03T02:28:22.031Z INFO [worker-9]  Worker shutdown complete
+2025-08-03T02:29:13.083Z INFO [worker-9]  Worker started
+2025-08-03T02:29:20.710Z INFO [worker-9]  Worker shutdown complete
+2025-08-03T02:30:09.701Z INFO [worker-9]  Worker started
+2025-08-03T02:34:27.618Z INFO [worker-9]  Worker started
+2025-08-03T02:36:23.355Z INFO [worker-9]  Worker shutdown complete
+2025-08-03T02:38:26.907Z INFO [worker-9]  Worker started
+2025-08-03T02:40:43.050Z INFO [worker-9]  Worker shutdown complete
+2025-08-03T02:43:51.137Z INFO [worker-9]  Worker started
+2025-08-03T02:44:08.522Z INFO [worker-9]  Worker shutdown complete
+2025-08-03T02:44:22.821Z INFO [worker-9]  Worker started
+2025-08-03T02:45:14.000Z INFO [worker-9]  Worker shutdown complete
+2025-08-03T02:46:17.874Z INFO [worker-9]  Worker started
+2025-08-03T02:46:17.910Z ERROR [worker-9]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T02:46:21.911Z ERROR [worker-9]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T02:46:25.911Z ERROR [worker-9]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T02:46:29.912Z ERROR [worker-9]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T02:46:33.915Z ERROR [worker-9]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T02:46:37.919Z ERROR [worker-9]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T02:46:41.921Z ERROR [worker-9]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T02:46:45.931Z ERROR [worker-9]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T02:46:49.934Z ERROR [worker-9]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T02:46:53.935Z ERROR [worker-9]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T02:46:57.937Z ERROR [worker-9]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T02:47:01.946Z ERROR [worker-9]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T02:47:05.948Z ERROR [worker-9]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T02:47:09.949Z ERROR [worker-9]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T02:47:13.951Z ERROR [worker-9]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T02:47:17.953Z ERROR [worker-9]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T02:47:21.954Z ERROR [worker-9]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T02:47:25.955Z ERROR [worker-9]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T02:47:29.960Z ERROR [worker-9]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T02:47:33.963Z ERROR [worker-9]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T02:47:37.968Z ERROR [worker-9]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T02:47:41.972Z ERROR [worker-9]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T02:47:45.975Z ERROR [worker-9]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T02:47:48.984Z INFO [worker-9]  Worker shutdown complete
+2025-08-03T02:47:50.767Z INFO [worker-9]  Worker started
+2025-08-03T02:49:44.871Z INFO [worker-9]  Worker shutdown complete
+2025-08-03T02:51:09.744Z INFO [worker-9]  Worker started
+2025-08-03T03:23:31.818Z INFO [worker-9]  Worker shutdown complete
+2025-08-03T03:23:35.313Z INFO [worker-9]  Worker started
+2025-08-03T03:24:10.084Z INFO [worker-9]  Worker started
+2025-08-03T03:24:10.180Z INFO [worker-9]  Worker shutdown complete
+2025-08-03T03:53:45.499Z INFO [worker-9]  Worker shutdown complete
+2025-08-04T15:56:18.535Z INFO [worker-9]  Worker started
+2025-08-04T16:20:11.191Z INFO [worker-9]  Worker shutdown complete
+2025-08-04T16:20:38.459Z INFO [worker-9]  Worker started
+2025-08-04T17:10:12.395Z INFO [worker-9]  Worker started
+2025-08-04T17:10:13.241Z INFO [worker-9]  Worker shutdown complete
+2025-08-04T18:12:00.615Z INFO [worker-9]  Worker shutdown complete
+2025-08-04T18:12:08.570Z INFO [worker-9]  Worker started
+2025-08-05T01:16:57.181Z INFO [worker-9]  Worker shutdown complete
+2025-08-05T01:17:04.540Z INFO [worker-9]  Worker started
+2025-08-05T22:51:31.478Z INFO [worker-9]  Worker started
+2025-08-05T23:29:57.745Z INFO [worker-9]  Worker started
+2025-08-06T14:00:53.418Z INFO [worker-9]  Worker shutdown complete
+2025-08-06T14:01:38.616Z INFO [worker-9]  Worker started
+2025-08-06T14:07:47.263Z INFO [worker-9]  Worker started
+2025-08-06T14:09:31.721Z INFO [worker-9]  Worker started
+2025-08-06T14:11:56.001Z INFO [worker-9]  Worker shutdown complete
+2025-08-06T14:11:57.777Z INFO [worker-9]  Worker started
+2025-08-06T15:14:22.068Z INFO [worker-9]  Worker started
+2025-08-06T15:15:54.588Z INFO [worker-9]  Worker started
+2025-08-06T15:18:14.389Z INFO [worker-9]  Worker shutdown complete
+2025-08-06T15:19:20.416Z INFO [worker-9]  Worker started
+2025-08-06T15:29:35.735Z INFO [worker-9]  Worker started
+2025-08-06T15:31:27.512Z INFO [worker-9]  Worker shutdown complete
+2025-08-06T15:34:15.110Z INFO [worker-9]  Worker started
+2025-08-06T15:34:15.164Z ERROR [worker-9]  Worker batch error ERROR: column "domain_crawl_count" does not exist
+2025-08-06T15:34:32.891Z INFO [worker-9]  Worker started
+2025-08-06T15:35:17.511Z INFO [worker-9]  Worker started
+2025-08-06T15:37:09.925Z INFO [worker-9]  Worker started
+2025-08-06T15:38:13.989Z INFO [worker-9]  Worker started
+2025-08-06T15:38:35.632Z INFO [worker-9]  Worker started
+2025-08-06T16:02:24.510Z INFO [worker-9]  Worker shutdown complete
+2025-08-06T16:02:29.916Z INFO [worker-9]  Worker started
+2025-08-06T16:15:48.443Z INFO [worker-9]  Worker started
+2025-08-18T17:15:38.007Z INFO [worker-9]  Worker started
+2025-08-18T23:54:47.913Z INFO [worker-9]  Worker shutdown complete

@@ -1,0 +1,168 @@
+2025-08-03T01:27:50.733Z INFO [worker-1]  Worker started
+2025-08-03T01:27:58.786Z INFO [worker-1]  Processing batch of 5 URLs
+2025-08-03T01:27:58.786Z INFO [worker-1] [http://darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion/0xacab] Starting crawl
+2025-08-03T01:28:05.985Z ERROR [worker-1] [http://darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion/0xacab] Crawl failed ERROR: Socks5 proxy rejected connection - Failure
+2025-08-03T01:28:07.176Z INFO [worker-1] [http://darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion/recon] Starting crawl
+2025-08-03T01:31:09.300Z INFO [worker-1]  Worker started
+2025-08-03T01:33:02.360Z INFO [worker-1]  Worker shutdown complete
+2025-08-03T01:35:23.600Z INFO [worker-1]  Worker started
+2025-08-03T01:35:23.614Z ERROR [worker-1]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T01:35:27.621Z ERROR [worker-1]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T01:35:31.625Z ERROR [worker-1]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T01:35:35.628Z ERROR [worker-1]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T01:35:39.630Z ERROR [worker-1]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T01:35:43.634Z ERROR [worker-1]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T01:35:47.638Z ERROR [worker-1]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T01:35:51.643Z ERROR [worker-1]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T01:35:55.645Z ERROR [worker-1]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T01:35:59.649Z ERROR [worker-1]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T01:36:03.657Z ERROR [worker-1]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T01:36:07.660Z ERROR [worker-1]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T01:36:11.663Z ERROR [worker-1]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T01:36:15.667Z ERROR [worker-1]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T01:36:19.671Z ERROR [worker-1]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T01:36:23.674Z ERROR [worker-1]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T01:36:27.680Z ERROR [worker-1]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T01:36:31.684Z ERROR [worker-1]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T01:36:35.686Z ERROR [worker-1]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T01:36:39.688Z ERROR [worker-1]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T01:36:43.692Z ERROR [worker-1]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T01:36:47.697Z ERROR [worker-1]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T01:36:51.702Z ERROR [worker-1]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T01:37:13.248Z INFO [worker-1]  Worker started
+2025-08-03T01:39:32.630Z INFO [worker-1]  Worker started
+2025-08-03T01:43:31.100Z INFO [worker-1]  Processing batch of 3 URLs
+2025-08-03T01:43:31.134Z INFO [worker-1] [http://darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion/xmrguide] Domain darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion locked by another worker, skipping
+2025-08-03T01:43:31.138Z INFO [worker-1] [http://darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion/cia] Domain darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion locked by another worker, skipping
+2025-08-03T01:43:31.141Z INFO [worker-1] [http://darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion/recon] Domain darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion locked by another worker, skipping
+2025-08-03T01:44:29.063Z INFO [worker-1]  Worker started
+2025-08-03T01:46:12.822Z INFO [worker-1]  Worker started
+2025-08-03T01:49:17.239Z INFO [worker-1]  Worker started
+2025-08-03T01:51:39.309Z INFO [worker-1]  Worker started
+2025-08-03T01:53:49.022Z INFO [worker-1]  Worker started
+2025-08-03T01:53:49.036Z INFO [worker-1]  Processing batch of 1 URLs
+2025-08-03T01:53:49.052Z INFO [worker-1] [http://darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion/] 🔒 Acquired lock for domain: darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion
+2025-08-03T01:53:49.053Z ERROR [worker-1] [http://darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion/] ❌ Crawl failed for domain: darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion ERROR: inconsistent types deduced for parameter $2
+2025-08-03T01:53:49.056Z ERROR [worker-1]  Worker batch error ERROR: inconsistent types deduced for parameter $2
+2025-08-03T01:55:19.306Z INFO [worker-1]  Worker started
+2025-08-03T01:57:37.866Z INFO [worker-1]  Worker started
+2025-08-03T02:00:12.971Z INFO [worker-1]  Worker started
+2025-08-03T02:00:12.986Z INFO [worker-1]  Processing batch of 1 URLs
+2025-08-03T02:00:13.005Z INFO [worker-1] [http://darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion/] 🔒 Acquired lock for domain: darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion
+2025-08-03T02:00:13.006Z INFO [worker-1] [http://darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion/] Starting crawl
+2025-08-03T02:00:15.857Z INFO [worker-1] [http://darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion/] Added 37 new URLs to queue
+2025-08-03T02:00:15.858Z INFO [worker-1] [http://darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion/] Crawl completed
+2025-08-03T02:00:15.858Z INFO [worker-1] [http://darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion/] ✅ Successfully crawled domain: darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion
+2025-08-03T02:00:15.859Z INFO [worker-1]  🔓 Released lock for domain: darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion
+2025-08-03T02:00:17.002Z INFO [worker-1]  Processing batch of 3 URLs
+2025-08-03T02:00:17.012Z INFO [worker-1] [http://darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion/tlc] Domain darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion locked by another worker, skipping
+2025-08-03T02:00:17.023Z INFO [worker-1] [http://darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion/tor] Domain darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion locked by another worker, skipping
+2025-08-03T02:00:17.025Z INFO [worker-1] [http://darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion/pornhub] Domain darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion locked by another worker, skipping
+2025-08-03T02:00:18.503Z INFO [worker-1]  Processing batch of 3 URLs
+2025-08-03T02:00:18.504Z INFO [worker-1] [http://darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion/terms] 🔒 Acquired lock for domain: darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion
+2025-08-03T02:00:18.505Z INFO [worker-1] [http://darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion/terms] Starting crawl
+2025-08-03T02:00:19.028Z INFO [worker-1]  Processing batch of 3 URLs
+2025-08-03T02:00:19.028Z INFO [worker-1] [http://darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion/bbc] 🔒 Acquired lock for domain: darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion
+2025-08-03T02:00:19.030Z ERROR [worker-1] [http://darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion/bbc] ❌ Crawl failed for domain: darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion ERROR: inconsistent types deduced for parameter $2
+2025-08-03T02:00:19.034Z ERROR [worker-1]  Worker batch error ERROR: inconsistent types deduced for parameter $2
+2025-08-03T02:00:19.875Z INFO [worker-1] [http://darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion/terms] Crawl completed
+2025-08-03T02:00:19.876Z INFO [worker-1] [http://darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion/terms] ✅ Successfully crawled domain: darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion
+2025-08-03T02:00:19.876Z INFO [worker-1]  🔓 Released lock for domain: darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion
+2025-08-03T02:00:22.486Z INFO [worker-1]  Processing batch of 1 URLs
+2025-08-03T02:00:22.488Z INFO [worker-1] [http://darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion/captcha/exploit-in] 🔒 Acquired lock for domain: darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion
+2025-08-03T02:00:22.489Z INFO [worker-1] [http://darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion/captcha/exploit-in] Starting crawl
+2025-08-03T02:00:24.215Z INFO [worker-1] [http://darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion/captcha/exploit-in] Added 1 new URLs to queue
+2025-08-03T02:00:24.215Z INFO [worker-1] [http://darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion/captcha/exploit-in] Crawl completed
+2025-08-03T02:00:24.216Z INFO [worker-1] [http://darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion/captcha/exploit-in] ✅ Successfully crawled domain: darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion
+2025-08-03T02:00:24.218Z INFO [worker-1]  🔓 Released lock for domain: darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion
+2025-08-03T02:01:21.199Z INFO [worker-1]  Processing batch of 1 URLs
+2025-08-03T02:01:21.202Z INFO [worker-1] [http://darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion/mirrors.txt] Domain darkfailenbsdla5mal2mxn2uz66od5vtzd5qozslagrfzachha3f3id.onion locked by another worker, skipping
+2025-08-03T02:04:08.559Z INFO [worker-1]  Worker started
+2025-08-03T02:13:23.109Z INFO [worker-1]  Worker shutdown complete
+2025-08-03T02:13:25.625Z INFO [worker-1]  Worker started
+2025-08-03T02:13:51.424Z INFO [worker-1]  Worker shutdown complete
+2025-08-03T02:13:54.090Z INFO [worker-1]  Worker started
+2025-08-03T02:13:56.599Z INFO [worker-1]  Worker shutdown complete
+2025-08-03T02:13:59.012Z INFO [worker-1]  Worker started
+2025-08-03T02:27:39.432Z INFO [worker-1]  Worker started
+2025-08-03T02:28:22.029Z INFO [worker-1]  Worker shutdown complete
+2025-08-03T02:29:13.080Z INFO [worker-1]  Worker started
+2025-08-03T02:29:20.709Z INFO [worker-1]  Worker shutdown complete
+2025-08-03T02:30:09.698Z INFO [worker-1]  Worker started
+2025-08-03T02:34:27.616Z INFO [worker-1]  Worker started
+2025-08-03T02:36:23.354Z INFO [worker-1]  Worker shutdown complete
+2025-08-03T02:38:26.904Z INFO [worker-1]  Worker started
+2025-08-03T02:40:43.048Z INFO [worker-1]  Worker shutdown complete
+2025-08-03T02:43:51.134Z INFO [worker-1]  Worker started
+2025-08-03T02:44:08.520Z INFO [worker-1]  Worker shutdown complete
+2025-08-03T02:44:22.818Z INFO [worker-1]  Worker started
+2025-08-03T02:45:14.000Z INFO [worker-1]  Worker shutdown complete
+2025-08-03T02:46:17.871Z INFO [worker-1]  Worker started
+2025-08-03T02:46:17.900Z ERROR [worker-1]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T02:46:21.904Z ERROR [worker-1]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T02:46:25.905Z ERROR [worker-1]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T02:46:29.910Z ERROR [worker-1]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T02:46:33.913Z ERROR [worker-1]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T02:46:37.916Z ERROR [worker-1]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T02:46:41.919Z ERROR [worker-1]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T02:46:45.923Z ERROR [worker-1]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T02:46:49.924Z ERROR [worker-1]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T02:46:53.924Z ERROR [worker-1]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T02:46:57.927Z ERROR [worker-1]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T02:47:01.929Z ERROR [worker-1]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T02:47:05.934Z ERROR [worker-1]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T02:47:09.937Z ERROR [worker-1]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T02:47:13.941Z ERROR [worker-1]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T02:47:17.945Z ERROR [worker-1]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T02:47:21.949Z ERROR [worker-1]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T02:47:25.954Z ERROR [worker-1]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T02:47:29.959Z ERROR [worker-1]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T02:47:33.962Z ERROR [worker-1]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T02:47:37.967Z ERROR [worker-1]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T02:47:41.972Z ERROR [worker-1]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T02:47:45.975Z ERROR [worker-1]  Worker batch error ERROR: FOR UPDATE cannot be applied to the nullable side of an outer join
+2025-08-03T02:47:48.983Z INFO [worker-1]  Worker shutdown complete
+2025-08-03T02:47:50.763Z INFO [worker-1]  Worker started
+2025-08-03T02:49:44.870Z INFO [worker-1]  Worker shutdown complete
+2025-08-03T02:51:09.741Z INFO [worker-1]  Worker started
+2025-08-03T03:23:31.817Z INFO [worker-1]  Worker shutdown complete
+2025-08-03T03:23:35.310Z INFO [worker-1]  Worker started
+2025-08-03T03:24:10.081Z INFO [worker-1]  Worker started
+2025-08-03T03:24:10.174Z INFO [worker-1]  Worker shutdown complete
+2025-08-03T03:53:45.499Z INFO [worker-1]  Worker shutdown complete
+2025-08-04T15:56:18.532Z INFO [worker-1]  Worker started
+2025-08-04T16:20:11.189Z INFO [worker-1]  Worker shutdown complete
+2025-08-04T16:20:38.456Z INFO [worker-1]  Worker started
+2025-08-04T17:10:12.391Z INFO [worker-1]  Worker started
+2025-08-04T17:10:13.240Z INFO [worker-1]  Worker shutdown complete
+2025-08-04T18:12:00.613Z INFO [worker-1]  Worker shutdown complete
+2025-08-04T18:12:08.566Z INFO [worker-1]  Worker started
+2025-08-05T01:16:57.180Z INFO [worker-1]  Worker shutdown complete
+2025-08-05T01:17:04.537Z INFO [worker-1]  Worker started
+2025-08-05T22:51:31.475Z INFO [worker-1]  Worker started
+2025-08-05T23:29:57.742Z INFO [worker-1]  Worker started
+2025-08-06T14:00:53.417Z INFO [worker-1]  Worker shutdown complete
+2025-08-06T14:01:38.612Z INFO [worker-1]  Worker started
+2025-08-06T14:07:47.258Z INFO [worker-1]  Worker started
+2025-08-06T14:09:31.718Z INFO [worker-1]  Worker started
+2025-08-06T14:11:56.000Z INFO [worker-1]  Worker shutdown complete
+2025-08-06T14:11:57.774Z INFO [worker-1]  Worker started
+2025-08-06T15:14:22.065Z INFO [worker-1]  Worker started
+2025-08-06T15:15:54.584Z INFO [worker-1]  Worker started
+2025-08-06T15:18:14.388Z INFO [worker-1]  Worker shutdown complete
+2025-08-06T15:19:20.413Z INFO [worker-1]  Worker started
+2025-08-06T15:29:35.731Z INFO [worker-1]  Worker started
+2025-08-06T15:31:27.511Z INFO [worker-1]  Worker shutdown complete
+2025-08-06T15:34:15.107Z INFO [worker-1]  Worker started
+2025-08-06T15:34:15.161Z ERROR [worker-1]  Worker batch error ERROR: column "domain_crawl_count" does not exist
+2025-08-06T15:34:32.888Z INFO [worker-1]  Worker started
+2025-08-06T15:35:17.506Z INFO [worker-1]  Worker started
+2025-08-06T15:37:09.921Z INFO [worker-1]  Worker started
+2025-08-06T15:38:13.986Z INFO [worker-1]  Worker started
+2025-08-06T15:38:35.624Z INFO [worker-1]  Worker started
+2025-08-06T16:02:24.509Z INFO [worker-1]  Worker shutdown complete
+2025-08-06T16:02:29.912Z INFO [worker-1]  Worker started
+2025-08-06T16:15:44.616Z INFO [worker-1]  Worker shutdown complete
+2025-08-06T16:15:48.440Z INFO [worker-1]  Worker started
+2025-08-18T17:15:38.004Z INFO [worker-1]  Worker started
+2025-08-18T17:27:06.064Z ERROR [worker-1]  Worker batch error ERROR: could not write to file "base/pgsql_tmp/pgsql_tmp24944.247": No space left on device
