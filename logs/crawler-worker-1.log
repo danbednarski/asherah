@@ -166,3 +166,17 @@
 2025-08-06T16:15:48.440Z INFO [worker-1]  Worker started
 2025-08-18T17:15:38.004Z INFO [worker-1]  Worker started
 2025-08-18T17:27:06.064Z ERROR [worker-1]  Worker batch error ERROR: could not write to file "base/pgsql_tmp/pgsql_tmp24944.247": No space left on device
+2026-01-27T16:38:03.419Z INFO [worker-1]  Worker started
+2026-01-27T18:05:35.366Z INFO [worker-1] Worker started
+2026-01-27T18:40:51.967Z INFO [worker-1] Worker started
+2026-01-27T18:56:32.968Z INFO [worker-1] Worker started
+2026-01-27T18:56:44.790Z INFO [worker-1] Worker shutdown complete
+2026-01-27T18:56:46.784Z INFO [worker-1] Worker stopped
+2026-01-27T18:58:10.508Z INFO [worker-1] Worker started
+2026-01-27T18:58:13.970Z INFO [worker-1] Worker shutdown complete
+2026-01-27T19:00:08.187Z INFO [worker-1] Worker started
+2026-01-27T19:01:05.171Z INFO [worker-1] Worker shutdown complete
+2026-01-27T19:01:07.167Z INFO [worker-1] Worker stopped
+2026-01-27T19:22:33.042Z INFO [worker-1] Worker shutdown complete
+2026-01-27T19:22:38.769Z INFO [worker-1] Worker started
+2026-01-28T01:40:00.576Z INFO [worker-1] Worker shutdown complete

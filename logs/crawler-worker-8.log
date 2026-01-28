@@ -139,3 +139,17 @@
 2025-08-09T03:33:07.205Z ERROR [worker-8]  Worker batch error ERROR: Cannot use a pool after calling end on the pool
 2025-08-18T17:15:38.006Z INFO [worker-8]  Worker started
 2025-08-18T17:38:33.687Z ERROR [worker-8]  Worker batch error ERROR: could not write to file "base/pgsql_tmp/pgsql_tmp25273.388": No space left on device
+2026-01-27T16:38:03.422Z INFO [worker-8]  Worker started
+2026-01-27T18:05:35.369Z INFO [worker-8] Worker started
+2026-01-27T18:40:51.970Z INFO [worker-8] Worker started
+2026-01-27T18:56:32.971Z INFO [worker-8] Worker started
+2026-01-27T18:56:44.959Z INFO [worker-8] Worker shutdown complete
+2026-01-27T18:56:46.950Z INFO [worker-8] Worker stopped
+2026-01-27T18:58:10.516Z INFO [worker-8] Worker started
+2026-01-27T18:58:13.859Z INFO [worker-8] Worker shutdown complete
+2026-01-27T19:00:08.193Z INFO [worker-8] Worker started
+2026-01-27T19:01:08.433Z INFO [worker-8] Worker shutdown complete
+2026-01-27T19:22:01.417Z INFO [worker-8] Worker shutdown complete
+2026-01-27T19:22:03.413Z INFO [worker-8] Worker stopped
+2026-01-27T19:22:38.771Z INFO [worker-8] Worker started
+2026-01-28T01:40:00.576Z INFO [worker-8] Worker shutdown complete

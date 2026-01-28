@@ -1,0 +1,22 @@
+2026-01-28T01:40:06.533Z INFO [scanner-worker-3] Scanner worker started
+2026-01-28T01:40:06.603Z ERROR [scanner-worker-3] Worker batch error ERROR: relation "scan_queue" does not exist
+2026-01-28T01:40:10.621Z ERROR [scanner-worker-3] Worker batch error ERROR: relation "scan_queue" does not exist
+2026-01-28T01:40:14.625Z ERROR [scanner-worker-3] Worker batch error ERROR: relation "scan_queue" does not exist
+2026-01-28T01:40:18.630Z ERROR [scanner-worker-3] Worker batch error ERROR: relation "scan_queue" does not exist
+2026-01-28T01:40:22.632Z ERROR [scanner-worker-3] Worker batch error ERROR: relation "scan_queue" does not exist
+2026-01-28T01:40:26.636Z ERROR [scanner-worker-3] Worker batch error ERROR: relation "scan_queue" does not exist
+2026-01-28T01:40:30.640Z ERROR [scanner-worker-3] Worker batch error ERROR: relation "scan_queue" does not exist
+2026-01-28T01:40:34.642Z ERROR [scanner-worker-3] Worker batch error ERROR: relation "scan_queue" does not exist
+2026-01-28T01:40:35.787Z INFO [scanner-worker-3] Worker shutdown complete
+2026-01-28T01:43:07.312Z INFO [scanner-worker-3] Scanner worker started
+2026-01-28T01:43:36.741Z INFO [scanner-worker-3] Worker shutdown complete
+2026-01-28T01:44:41.777Z INFO [scanner-worker-3] Scanner worker started
+2026-01-28T01:45:26.190Z INFO [scanner-worker-3] Worker shutdown complete
+2026-01-28T01:47:50.094Z INFO [scanner-worker-3] Scanner worker started
+2026-01-28T01:56:23.946Z INFO [scanner-worker-3] Worker shutdown complete
+2026-01-28T02:00:21.988Z INFO [scanner-worker-3] Scanner worker started
+2026-01-28T02:15:04.872Z INFO [scanner-worker-3] Scanner worker started
+2026-01-28T02:16:37.300Z INFO [scanner-worker-3] Worker shutdown complete
+2026-01-28T02:17:15.392Z INFO [scanner-worker-3] Scanner worker started
+2026-01-28T04:12:22.413Z INFO [scanner-worker-3] Worker shutdown complete
+2026-01-28T04:12:23.720Z INFO [scanner-worker-3] Scanner worker started

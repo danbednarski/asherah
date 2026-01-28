@@ -298,3 +298,50 @@
 2025-08-18T17:15:38.003Z INFO [ORCHESTRATOR] Starting 10 crawler workers 
 2025-08-18T17:15:38.007Z INFO [ORCHESTRATOR] Search engine started successfully 
 2025-08-18T23:54:47.912Z INFO [ORCHESTRATOR] Stopping search engine... 
+2026-01-27T16:38:03.401Z INFO [ORCHESTRATOR] Database schema already exists 
+2026-01-27T16:38:03.402Z INFO [ORCHESTRATOR] Search engine initialized 
+2026-01-27T16:38:03.418Z INFO [ORCHESTRATOR] Added 2 seed URLs to crawl queue 
+2026-01-27T16:38:03.418Z INFO [ORCHESTRATOR] Starting 10 crawler workers 
+2026-01-27T16:38:03.423Z INFO [ORCHESTRATOR] Search engine started successfully 
+2026-01-27T17:35:34.729Z INFO [ORCHESTRATOR] Stopping search engine... 
+2026-01-27T18:05:35.348Z INFO [ORCHESTRATOR] Database schema already exists
+2026-01-27T18:05:35.349Z INFO [ORCHESTRATOR] Search engine initialized
+2026-01-27T18:05:35.365Z INFO [ORCHESTRATOR] Added 2 seed URLs to crawl queue
+2026-01-27T18:05:35.366Z INFO [ORCHESTRATOR] Starting 10 crawler workers
+2026-01-27T18:05:35.370Z INFO [ORCHESTRATOR] Search engine started successfully
+2026-01-27T18:05:38.008Z INFO [ORCHESTRATOR] Stopping search engine...
+2026-01-27T18:40:51.955Z INFO [ORCHESTRATOR] Database schema already exists
+2026-01-27T18:40:51.955Z INFO [ORCHESTRATOR] Search engine initialized
+2026-01-27T18:40:51.967Z INFO [ORCHESTRATOR] Added 2 seed URLs to crawl queue
+2026-01-27T18:40:51.967Z INFO [ORCHESTRATOR] Starting 10 crawler workers
+2026-01-27T18:40:51.971Z INFO [ORCHESTRATOR] Search engine started successfully
+2026-01-27T18:56:30.349Z INFO [ORCHESTRATOR] Stopping search engine...
+2026-01-27T18:56:32.957Z INFO [ORCHESTRATOR] Database schema already exists
+2026-01-27T18:56:32.958Z INFO [ORCHESTRATOR] Search engine initialized
+2026-01-27T18:56:32.967Z INFO [ORCHESTRATOR] Added 2 seed URLs to crawl queue
+2026-01-27T18:56:32.968Z INFO [ORCHESTRATOR] Starting 10 crawler workers
+2026-01-27T18:56:32.972Z INFO [ORCHESTRATOR] Search engine started successfully
+2026-01-27T18:56:48.420Z INFO [ORCHESTRATOR] Search engine stopped
+2026-01-27T18:58:07.505Z INFO [ORCHESTRATOR] Stopping search engine...
+2026-01-27T18:58:10.438Z INFO [ORCHESTRATOR] Database schema already exists
+2026-01-27T18:58:10.440Z INFO [ORCHESTRATOR] Search engine initialized
+2026-01-27T18:58:10.506Z INFO [ORCHESTRATOR] Added 2 seed URLs to crawl queue
+2026-01-27T18:58:10.507Z INFO [ORCHESTRATOR] Starting 10 crawler workers
+2026-01-27T18:58:10.520Z INFO [ORCHESTRATOR] Search engine started successfully
+2026-01-27T18:58:13.975Z INFO [ORCHESTRATOR] Search engine stopped
+2026-01-27T19:00:05.327Z INFO [ORCHESTRATOR] Stopping search engine...
+2026-01-27T19:00:08.172Z INFO [ORCHESTRATOR] Database schema already exists
+2026-01-27T19:00:08.174Z INFO [ORCHESTRATOR] Search engine initialized
+2026-01-27T19:00:08.186Z INFO [ORCHESTRATOR] Added 2 seed URLs to crawl queue
+2026-01-27T19:00:08.187Z INFO [ORCHESTRATOR] Starting 10 crawler workers
+2026-01-27T19:00:08.194Z INFO [ORCHESTRATOR] Search engine started successfully
+2026-01-27T19:01:08.433Z INFO [ORCHESTRATOR] Search engine stopped
+2026-01-27T19:21:52.395Z INFO [ORCHESTRATOR] Stopping search engine...
+2026-01-27T19:22:33.044Z INFO [ORCHESTRATOR] Search engine stopped
+2026-01-27T19:22:38.759Z INFO [ORCHESTRATOR] Database schema already exists
+2026-01-27T19:22:38.759Z INFO [ORCHESTRATOR] Search engine initialized
+2026-01-27T19:22:38.768Z INFO [ORCHESTRATOR] Added 2 seed URLs to crawl queue
+2026-01-27T19:22:38.769Z INFO [ORCHESTRATOR] Starting 10 crawler workers
+2026-01-27T19:22:38.772Z INFO [ORCHESTRATOR] Search engine started successfully
+2026-01-28T01:40:00.575Z INFO [ORCHESTRATOR] Stopping search engine...
+2026-01-28T01:40:18.806Z INFO [ORCHESTRATOR] Search engine stopped
