@@ -25,7 +25,7 @@ export class ScannerOrchestrator {
   private isRunning: boolean;
 
   constructor(options: ScannerOrchestratorOptions = {}) {
-    this.workerCount = options.workerCount ?? parseInt(process.env['SCANNER_WORKERS'] ?? '3', 10);
+    this.workerCount = options.workerCount ?? parseInt(process.env['SCANNER_WORKERS'] ?? '5', 10);
     this.options = options;
     this.workers = [];
     this.database = new Database();
@@ -40,6 +40,12 @@ export class ScannerOrchestrator {
 
     this.isRunning = true;
     logger.info(`Starting scanner orchestrator with ${this.workerCount} workers`);
+
+    // Clear stale locks from previous sessions
+    const cleared = await this.database.clearAllLocks();
+    if (cleared.domain > 0 || cleared.scan > 0 || cleared.dirscan > 0) {
+      console.log(`Cleared stale locks: ${cleared.domain} domain, ${cleared.scan} scan, ${cleared.dirscan} dirscan`);
+    }
 
     console.log('\n========================================');
     console.log('   ASHERAH PORT SCANNER');
@@ -63,7 +69,7 @@ export class ScannerOrchestrator {
         timeout: this.options.timeout,
         maxConcurrent: this.options.maxConcurrent,
         minProbeDelay: this.options.minProbeDelay,
-      });
+      }, this.database);
       this.workers.push(worker);
     }
 

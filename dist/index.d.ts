@@ -9,6 +9,8 @@ declare class OnionSearchEngine {
     private workers;
     private readonly workerCount;
     private readonly database;
+    private readonly writeBuffer;
+    private readonly queueManager;
     private readonly logger;
     private isRunning;
     private statsInterval;

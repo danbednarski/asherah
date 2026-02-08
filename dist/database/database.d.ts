@@ -18,13 +18,21 @@ export declare class Database {
     acquireDomainLock(domain: string, workerId: string): Promise<boolean>;
     releaseDomainLock(domain: string, workerId: string): Promise<boolean>;
     extendDomainLock(domain: string, workerId: string): Promise<boolean>;
+    acquireDomainLockAndSetCrawling(domain: string, workerId: string): Promise<boolean>;
+    releaseDomainLockAndSetCompleted(domain: string, workerId: string): Promise<boolean>;
+    claimUrl(url: string, workerId: string): Promise<void>;
     updateDomainStatus(domain: string, status: string, workerId?: string | null): Promise<void>;
     getStatistics(): Promise<CrawlerStatistics>;
-    searchCombined(textQuery?: string | null, headerName?: string | null, headerValue?: string | null, titleQuery?: string | null, limit?: number, offset?: number, port?: number | null): Promise<SearchResultRow[]>;
+    searchCombined(textQuery?: string | null, headerName?: string | null, headerValue?: string | null, titleQuery?: string | null, limit?: number, offset?: number, port?: number | null, path?: string | null): Promise<SearchResultRow[]>;
     getDomainDetails(domain: string): Promise<DomainDetailsRow | null>;
     getIncomingLinks(domain: string, limit?: number, offset?: number): Promise<IncomingLinkRow[]>;
     getOutgoingLinks(domain: string, limit?: number, offset?: number): Promise<OutgoingLinkRow[]>;
     close(): Promise<void>;
+    clearAllLocks(): Promise<{
+        domain: number;
+        scan: number;
+        dirscan: number;
+    }>;
     getNextScans(workerId: string, limit?: number): Promise<Array<{
         id: number;
         domainId: number | null;
@@ -62,5 +70,39 @@ export declare class Database {
     }>>;
     populateScanQueueFromDomains(limit?: number, profile?: string): Promise<number>;
     queueDomainForScan(domain: string, priority?: number): Promise<void>;
+    getNextDirScans(workerId: string, limit?: number): Promise<Array<{
+        id: number;
+        domainId: number | null;
+        domain: string;
+        profile: 'quick' | 'standard' | 'full';
+        priority: number;
+        attempts: number;
+    }>>;
+    returnDirscanToQueue(scanId: number): Promise<void>;
+    markDirscanCompleted(scanId: number): Promise<void>;
+    markDirscanFailed(scanId: number, error: string): Promise<void>;
+    acquireDirscanLock(domain: string, workerId: string): Promise<boolean>;
+    releaseDirscanLock(domain: string, workerId: string): Promise<boolean>;
+    extendDirscanLock(domain: string, workerId: string): Promise<boolean>;
+    insertDirscanResult(domainId: number, domain: string, result: {
+        path: string;
+        statusCode: number;
+        contentLength: number | null;
+        contentType: string | null;
+        responseTimeMs: number;
+        serverHeader: string | null;
+        redirectUrl: string | null;
+        bodySnippet: string | null;
+        isInteresting: boolean;
+        interestReason: string | null;
+    }): Promise<number>;
+    populateDirscanQueueFromDomains(limit?: number, profile?: string): Promise<number>;
+    getDirscannerStatistics(): Promise<{
+        totalScans: number;
+        activeWorkers: number;
+        queueSize: number;
+        interestingFindings: number;
+        recentScans: number;
+    }>;
 }
 //# sourceMappingURL=database.d.ts.map

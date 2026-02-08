@@ -5,6 +5,8 @@ import { Database } from '../database/database.js';
 import { createWorkerLogger } from '../utils/logger.js';
 import { delay, randomDelay } from '../utils/delay.js';
 import { extractOnionDomain } from '../utils/domain.js';
+import type { WriteBuffer } from '../database/write-buffer.js';
+import type { QueueManager } from '../database/queue-manager.js';
 import type {
   CrawlerWorkerOptions,
   CrawlResult,
@@ -35,13 +37,22 @@ export class CrawlerWorker {
   private readonly torClient: TorClient;
   private readonly linkExtractor: LinkExtractor;
   private readonly database: Database;
+  private readonly ownsDatabase: boolean;
+  private readonly writeBuffer: WriteBuffer | null;
+  private readonly queueManager: QueueManager | null;
   private readonly logger: Logger;
   private readonly crawlDelay: number;
   private readonly maxContentSize: number;
   private isRunning: boolean;
   private startTime: number | null;
 
-  constructor(workerId: string, options: CrawlerWorkerOptions = {}) {
+  constructor(
+    workerId: string,
+    options: CrawlerWorkerOptions = {},
+    sharedDatabase?: Database,
+    writeBuffer?: WriteBuffer,
+    queueManager?: QueueManager,
+  ) {
     this.workerId = workerId;
     this.torClient = new TorClient({
       timeout: options.timeout ?? 45000,
@@ -49,7 +60,10 @@ export class CrawlerWorker {
       retryDelay: options.retryDelay ?? 3000,
     });
     this.linkExtractor = new LinkExtractor();
-    this.database = new Database(options.database ?? {});
+    this.database = sharedDatabase ?? new Database(options.database ?? {});
+    this.ownsDatabase = !sharedDatabase;
+    this.writeBuffer = writeBuffer ?? null;
+    this.queueManager = queueManager ?? null;
     this.isRunning = false;
     this.crawlDelay = options.crawlDelay ?? 2000;
     this.maxContentSize = options.maxContentSize ?? 1024 * 1024; // 1MB
@@ -81,12 +95,24 @@ export class CrawlerWorker {
 
   async stop(): Promise<void> {
     this.isRunning = false;
-    await this.database.close();
+    if (this.ownsDatabase) {
+      await this.database.close();
+    }
     this.logger.info('Worker shutdown complete');
   }
 
   private async crawlBatch(): Promise<void> {
-    const urls = await this.database.getNextUrls(this.workerId, 3);
+    let urls: QueueItem[];
+
+    if (this.queueManager) {
+      urls = this.queueManager.getUrls(this.workerId, 3);
+      // Claim URLs for observability
+      for (const urlData of urls) {
+        await this.database.claimUrl(urlData.url, this.workerId);
+      }
+    } else {
+      urls = await this.database.getNextUrls(this.workerId, 3);
+    }
 
     if (urls.length === 0) {
       this.logger.debug('No URLs to crawl, waiting...');
@@ -114,7 +140,7 @@ export class CrawlerWorker {
     console.log(`   🔢 Priority: ${urlData.priority} | Attempts: ${urlData.attempts}`);
 
     try {
-      lockAcquired = await this.database.acquireDomainLock(domain, this.workerId);
+      lockAcquired = await this.database.acquireDomainLockAndSetCrawling(domain, this.workerId);
 
       if (!lockAcquired) {
         console.log(`   ⏭️  Domain locked by another worker, returning to queue\n`);
@@ -126,8 +152,6 @@ export class CrawlerWorker {
       }
 
       console.log(`   🔒 Lock acquired, starting crawl...`);
-
-      await this.database.updateDomainStatus(domain, 'crawling', this.workerId);
 
       const crawlResult = await this.crawlUrl(urlData.url);
       await this.database.markUrlCompleted(urlData.url, true);
@@ -156,17 +180,24 @@ export class CrawlerWorker {
         // Mark ALL pending URLs for this domain as failed
         const markedCount = await this.database.markDomainConnectionFailed(domain, errorMessage);
         console.log(`   🚫 DOMAIN UNREACHABLE - marked ${markedCount} URLs for ${shortDomain} as failed\n`);
-        await this.database.logCrawl(urlData.url, 'error', null, null, null, `Domain connection failure: ${errorMessage}`, this.workerId);
+        if (this.writeBuffer) {
+          this.writeBuffer.bufferCrawlLog({ url: urlData.url, status: 'error', statusCode: null, responseTime: null, contentLength: null, error: `Domain connection failure: ${errorMessage}`, workerId: this.workerId });
+        } else {
+          await this.database.logCrawl(urlData.url, 'error', null, null, null, `Domain connection failure: ${errorMessage}`, this.workerId);
+        }
       } else {
         // Regular HTTP error (404, 500, etc.) - just mark this URL
         console.log(`   🔄 Will retry later\n`);
         await this.database.markUrlCompleted(urlData.url, false, errorMessage);
-        await this.database.logCrawl(urlData.url, 'error', null, null, null, errorMessage, this.workerId);
+        if (this.writeBuffer) {
+          this.writeBuffer.bufferCrawlLog({ url: urlData.url, status: 'error', statusCode: null, responseTime: null, contentLength: null, error: errorMessage, workerId: this.workerId });
+        } else {
+          await this.database.logCrawl(urlData.url, 'error', null, null, null, errorMessage, this.workerId);
+        }
       }
     } finally {
       if (lockAcquired) {
-        await this.database.releaseDomainLock(domain, this.workerId);
-        await this.database.updateDomainStatus(domain, 'completed', null);
+        await this.database.releaseDomainLockAndSetCompleted(domain, this.workerId);
       }
     }
   }
@@ -190,15 +221,27 @@ export class CrawlerWorker {
     const isHtml = contentType.includes('text/html');
     const isSuccessStatus = successResult.status >= 200 && successResult.status < 400;
 
-    await this.database.logCrawl(
-      url,
-      'success',
-      successResult.status,
-      responseTime,
-      successResult.data?.length ?? 0,
-      null,
-      this.workerId
-    );
+    if (this.writeBuffer) {
+      this.writeBuffer.bufferCrawlLog({
+        url,
+        status: 'success',
+        statusCode: successResult.status,
+        responseTime,
+        contentLength: successResult.data?.length ?? 0,
+        error: null,
+        workerId: this.workerId,
+      });
+    } else {
+      await this.database.logCrawl(
+        url,
+        'success',
+        successResult.status,
+        responseTime,
+        successResult.data?.length ?? 0,
+        null,
+        this.workerId
+      );
+    }
 
     const domain = extractOnionDomain(url);
     if (!domain) {
@@ -288,8 +331,14 @@ export class CrawlerWorker {
           ...Array.from(domainsFromElements).filter((d): d is string => d !== null),
           ...textOnlyDomains,
         ]);
-        for (const discoveredDomain of allDiscoveredDomains) {
-          await this.database.queueDomainForScan(discoveredDomain, 100);
+        if (this.writeBuffer) {
+          for (const discoveredDomain of allDiscoveredDomains) {
+            this.writeBuffer.bufferScanQueueDomain(discoveredDomain, 100);
+          }
+        } else {
+          for (const discoveredDomain of allDiscoveredDomains) {
+            await this.database.queueDomainForScan(discoveredDomain, 100);
+          }
         }
       }
     });

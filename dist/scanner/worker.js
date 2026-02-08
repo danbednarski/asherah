@@ -23,13 +23,14 @@ export class PortScanWorker {
     scanner;
     serviceDetector;
     database;
+    ownsDatabase;
     logger;
     maxConcurrent;
     minProbeDelay;
     scanDelay;
     isRunning;
     startTime;
-    constructor(workerId, options = {}) {
+    constructor(workerId, options = {}, sharedDatabase) {
         this.workerId = workerId;
         this.scanner = new TcpScanner({
             torHost: options.torHost,
@@ -37,7 +38,8 @@ export class PortScanWorker {
             timeout: options.timeout ?? 30000,
         });
         this.serviceDetector = new ServiceDetector();
-        this.database = new Database();
+        this.database = sharedDatabase ?? new Database();
+        this.ownsDatabase = !sharedDatabase;
         this.isRunning = false;
         this.maxConcurrent = options.maxConcurrent ?? 5;
         this.minProbeDelay = options.minProbeDelay ?? 200;
@@ -66,7 +68,9 @@ export class PortScanWorker {
     }
     async stop() {
         this.isRunning = false;
-        await this.database.close();
+        if (this.ownsDatabase) {
+            await this.database.close();
+        }
         this.logger.info('Worker shutdown complete');
     }
     async processBatch() {

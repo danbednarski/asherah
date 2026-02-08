@@ -3,6 +3,8 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { CrawlerWorker } from './crawler/worker.js';
 import { Database } from './database/database.js';
+import { WriteBuffer } from './database/write-buffer.js';
+import { QueueManager } from './database/queue-manager.js';
 import { createLogger } from './utils/logger.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -10,13 +12,17 @@ class OnionSearchEngine {
     workers = [];
     workerCount;
     database;
+    writeBuffer;
+    queueManager;
     logger;
     isRunning = false;
     statsInterval = null;
     options;
     constructor(options = {}) {
         this.workerCount = options.workerCount ?? 10;
-        this.database = new Database(options.database ?? {});
+        this.database = new Database({ ...(options.database ?? {}), max: 30 });
+        this.writeBuffer = new WriteBuffer(this.database, { flushIntervalMs: 2000, maxBufferSize: 50 });
+        this.queueManager = new QueueManager(this.database, { fetchIntervalMs: 5000, batchSize: 50, lowWaterMark: 10 });
         this.options = options;
         this.logger = createLogger({
             level: options.logLevel ?? 'info',
@@ -71,10 +77,17 @@ class OnionSearchEngine {
             return;
         }
         this.isRunning = true;
+        // Clear stale locks from previous sessions
+        const cleared = await this.database.clearAllLocks();
+        if (cleared.domain > 0 || cleared.scan > 0 || cleared.dirscan > 0) {
+            this.logger.info(`Cleared stale locks: ${cleared.domain} domain, ${cleared.scan} scan, ${cleared.dirscan} dirscan`);
+        }
+        this.writeBuffer.start();
+        this.queueManager.start();
         this.logger.info(`Starting ${this.workerCount} crawler workers`);
         for (let i = 0; i < this.workerCount; i++) {
             const workerId = `worker-${i + 1}`;
-            const worker = new CrawlerWorker(workerId, this.options);
+            const worker = new CrawlerWorker(workerId, this.options, this.database, this.writeBuffer, this.queueManager);
             this.workers.push(worker);
             worker.start().catch((error) => {
                 const errorMessage = error instanceof Error ? error.message : 'Unknown error';
@@ -100,6 +113,8 @@ class OnionSearchEngine {
         }
         await Promise.all(this.workers.map((worker) => worker.stop()));
         this.workers = [];
+        this.queueManager.stop();
+        await this.writeBuffer.stop();
         await this.database.close();
         this.logger.info('Search engine stopped');
     }

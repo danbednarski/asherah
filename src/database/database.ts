@@ -333,10 +333,17 @@ export class Database {
           cq.added_at ASC
         LIMIT $2
       ),
+      top_candidates AS (
+        -- Get top 50 candidates, then randomly pick from them to reduce contention
+        SELECT * FROM prioritized_urls LIMIT 50
+      ),
+      randomized AS (
+        SELECT id FROM top_candidates ORDER BY RANDOM() LIMIT $2
+      ),
       available_urls AS (
-        SELECT pu.id
-        FROM prioritized_urls pu
-        JOIN crawl_queue cq ON pu.id = cq.id
+        SELECT r.id
+        FROM randomized r
+        JOIN crawl_queue cq ON r.id = cq.id
         FOR UPDATE OF cq SKIP LOCKED
       )
       UPDATE crawl_queue
@@ -437,6 +444,37 @@ export class Database {
     return DomainExtendResultSchema.parse(row).extended;
   }
 
+  async acquireDomainLockAndSetCrawling(domain: string, workerId: string): Promise<boolean> {
+    const result = await this.query(
+      'SELECT acquire_domain_lock_and_set_crawling($1, $2) as acquired',
+      [domain, workerId]
+    );
+    const row = result.rows[0];
+    if (!row) {
+      return false;
+    }
+    return DomainLockResultSchema.parse(row).acquired;
+  }
+
+  async releaseDomainLockAndSetCompleted(domain: string, workerId: string): Promise<boolean> {
+    const result = await this.query(
+      'SELECT release_domain_lock_and_set_completed($1, $2) as released',
+      [domain, workerId]
+    );
+    const row = result.rows[0];
+    if (!row) {
+      return false;
+    }
+    return DomainReleaseResultSchema.parse(row).released;
+  }
+
+  async claimUrl(url: string, workerId: string): Promise<void> {
+    await this.query(
+      "UPDATE crawl_queue SET worker_id = $2, status = 'processing', last_attempt = NOW(), attempts = attempts + 1 WHERE url = $1 AND status = 'pending'",
+      [url, workerId]
+    );
+  }
+
   async updateDomainStatus(domain: string, status: string, workerId: string | null = null): Promise<void> {
     const queryText = `
       UPDATE domains
@@ -503,12 +541,14 @@ export class Database {
     titleQuery: string | null = null,
     limit = 50,
     offset = 0,
-    port: number | null = null
+    port: number | null = null,
+    path: string | null = null
   ): Promise<SearchResultRow[]> {
     let textCondition = '';
     let headerCondition = '';
     let titleCondition = '';
     let portCondition = '';
+    let pathCondition = '';
     const params: unknown[] = [];
     let paramIndex = 1;
 
@@ -534,13 +574,20 @@ export class Database {
 
     if (headerName || headerValue) {
       let headerWhere = '';
-      if (headerName) {
+      if (headerName && headerValue) {
+        // Specific header:value search (e.g., http:"Server: Apache")
         headerWhere += `h.header_name ILIKE $${paramIndex}`;
         params.push(`%${headerName}%`);
         paramIndex++;
-      }
-      if (headerValue) {
-        if (headerWhere) headerWhere += ' AND ';
+        headerWhere += ` AND h.header_value ILIKE $${paramIndex}`;
+        params.push(`%${headerValue}%`);
+        paramIndex++;
+      } else if (headerName) {
+        // No colon — search both names and values (e.g., http:"Win32")
+        headerWhere += `(h.header_name ILIKE $${paramIndex} OR h.header_value ILIKE $${paramIndex})`;
+        params.push(`%${headerName}%`);
+        paramIndex++;
+      } else if (headerValue) {
         headerWhere += `h.header_value ILIKE $${paramIndex}`;
         params.push(`%${headerValue}%`);
         paramIndex++;
@@ -562,6 +609,17 @@ export class Database {
         )
       `;
       params.push(port);
+      paramIndex++;
+    }
+
+    if (path !== null) {
+      pathCondition = `
+        AND EXISTS (
+          SELECT 1 FROM dirscan_results dr
+          WHERE dr.domain = d.domain AND dr.path ILIKE $${paramIndex} AND dr.is_interesting = true
+        )
+      `;
+      params.push(`%${path}%`);
       paramIndex++;
     }
 
@@ -593,6 +651,7 @@ export class Database {
       ${titleCondition}
       ${headerCondition}
       ${portCondition}
+      ${pathCondition}
       GROUP BY p.id, p.url, p.title, p.content_text, p.meta_description, d.domain, p.last_crawled, p.status_code, p.content_length
       ORDER BY p.last_crawled DESC
       LIMIT $${limitParam} OFFSET $${offsetParam}
@@ -701,6 +760,25 @@ export class Database {
 
   async close(): Promise<void> {
     await this.pool.end();
+  }
+
+  async clearAllLocks(): Promise<{ domain: number; scan: number; dirscan: number }> {
+    const results = { domain: 0, scan: 0, dirscan: 0 };
+
+    const domainResult = await this.query('DELETE FROM domain_locks');
+    results.domain = domainResult.rowCount ?? 0;
+
+    const scanResult = await this.query('DELETE FROM scan_locks');
+    results.scan = scanResult.rowCount ?? 0;
+
+    try {
+      const dirscanResult = await this.query('DELETE FROM dirscan_locks');
+      results.dirscan = dirscanResult.rowCount ?? 0;
+    } catch {
+      // Table may not exist yet
+    }
+
+    return results;
   }
 
   // ==================== Scanner Methods ====================
@@ -1003,5 +1081,253 @@ export class Database {
       ON CONFLICT (domain) DO NOTHING
     `;
     await this.query(queryText, [domain, priority]);
+  }
+
+  // ==================== Dir Scanner Methods ====================
+
+  async getNextDirScans(workerId: string, limit = 1): Promise<Array<{
+    id: number;
+    domainId: number | null;
+    domain: string;
+    profile: 'quick' | 'standard' | 'full';
+    priority: number;
+    attempts: number;
+  }>> {
+    const queryText = `
+      WITH available_scans AS (
+        SELECT dq.id
+        FROM dirscan_queue dq
+        WHERE dq.status = 'pending'
+        AND dq.attempts < 3
+        AND (dq.last_attempt IS NULL OR dq.last_attempt < NOW() - INTERVAL '5 minutes' * POWER(2, LEAST(dq.attempts, 4)))
+        AND NOT EXISTS (
+          SELECT 1 FROM dirscan_locks dl
+          WHERE dl.domain = dq.domain
+          AND dl.expires_at > NOW()
+          AND dl.worker_id != $1
+        )
+        ORDER BY dq.priority ASC, dq.created_at ASC
+        LIMIT $2
+        FOR UPDATE OF dq SKIP LOCKED
+      )
+      UPDATE dirscan_queue
+      SET status = 'processing', worker_id = $1, last_attempt = NOW(), attempts = attempts + 1
+      WHERE id IN (SELECT id FROM available_scans)
+      RETURNING id, domain_id, domain, profile, priority, attempts
+    `;
+
+    const result = await this.query(queryText, [workerId, limit]);
+    return result.rows.map((row) => ({
+      id: row.id as number,
+      domainId: row.domain_id as number | null,
+      domain: row.domain as string,
+      profile: row.profile as 'quick' | 'standard' | 'full',
+      priority: row.priority as number,
+      attempts: row.attempts as number,
+    }));
+  }
+
+  async returnDirscanToQueue(scanId: number): Promise<void> {
+    const queryText = `
+      UPDATE dirscan_queue
+      SET status = 'pending', worker_id = NULL
+      WHERE id = $1
+    `;
+    await this.query(queryText, [scanId]);
+  }
+
+  async markDirscanCompleted(scanId: number): Promise<void> {
+    const queryText = `
+      UPDATE dirscan_queue
+      SET status = 'completed', worker_id = NULL
+      WHERE id = $1
+    `;
+    await this.query(queryText, [scanId]);
+  }
+
+  async markDirscanFailed(scanId: number, error: string): Promise<void> {
+    const queryText = `
+      UPDATE dirscan_queue
+      SET status = CASE
+        WHEN attempts >= 3 THEN 'failed'
+        ELSE 'pending'
+      END,
+      error_message = $2::text,
+      worker_id = NULL
+      WHERE id = $1
+    `;
+    await this.query(queryText, [scanId, error]);
+  }
+
+  async acquireDirscanLock(domain: string, workerId: string): Promise<boolean> {
+    const result = await this.query('SELECT acquire_dirscan_lock($1, $2) as acquired', [domain, workerId]);
+    const row = result.rows[0];
+    return row?.acquired === true;
+  }
+
+  async releaseDirscanLock(domain: string, workerId: string): Promise<boolean> {
+    const result = await this.query('SELECT release_dirscan_lock($1, $2) as released', [domain, workerId]);
+    const row = result.rows[0];
+    return row?.released === true;
+  }
+
+  async extendDirscanLock(domain: string, workerId: string): Promise<boolean> {
+    const result = await this.query('SELECT extend_dirscan_lock($1, $2) as extended', [domain, workerId]);
+    const row = result.rows[0];
+    return row?.extended === true;
+  }
+
+  async insertDirscanResult(
+    domainId: number,
+    domain: string,
+    result: {
+      path: string;
+      statusCode: number;
+      contentLength: number | null;
+      contentType: string | null;
+      responseTimeMs: number;
+      serverHeader: string | null;
+      redirectUrl: string | null;
+      bodySnippet: string | null;
+      isInteresting: boolean;
+      interestReason: string | null;
+    }
+  ): Promise<number> {
+    const queryText = `
+      INSERT INTO dirscan_results (
+        domain_id, domain, path, status_code, content_length,
+        content_type, response_time_ms, server_header, redirect_url,
+        body_snippet, is_interesting, interest_reason, scanned_at
+      )
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, NOW())
+      ON CONFLICT (domain, path)
+      DO UPDATE SET
+        status_code = $4,
+        content_length = $5,
+        content_type = $6,
+        response_time_ms = $7,
+        server_header = $8,
+        redirect_url = $9,
+        body_snippet = COALESCE($10, dirscan_results.body_snippet),
+        is_interesting = $11,
+        interest_reason = $12,
+        scanned_at = NOW()
+      RETURNING id
+    `;
+    const dbResult = await this.query(queryText, [
+      domainId,
+      domain,
+      result.path,
+      result.statusCode,
+      result.contentLength,
+      result.contentType,
+      result.responseTimeMs,
+      result.serverHeader,
+      result.redirectUrl,
+      result.bodySnippet,
+      result.isInteresting,
+      result.interestReason,
+    ]);
+    const row = dbResult.rows[0];
+    if (!row) {
+      throw new Error('No row returned from insertDirscanResult');
+    }
+    return row.id as number;
+  }
+
+  async populateDirscanQueueFromDomains(
+    limit: number = 1000,
+    profile: string = 'standard'
+  ): Promise<number> {
+    // Only queue domains that have confirmed HTTP access:
+    // - Open port 80 or 443 in port_scans
+    // - OR successful page crawls (status 200-399)
+    const queryText = `
+      INSERT INTO dirscan_queue (domain_id, domain, profile, priority, status)
+      SELECT
+        d.id,
+        d.domain,
+        $2,
+        CASE
+          WHEN EXISTS (
+            SELECT 1 FROM pages p WHERE p.domain_id = d.id
+            AND p.status_code >= 200 AND p.status_code < 400
+            AND p.last_crawled > NOW() - INTERVAL '1 day'
+          ) THEN 10
+          WHEN EXISTS (
+            SELECT 1 FROM pages p WHERE p.domain_id = d.id
+            AND p.status_code >= 200 AND p.status_code < 400
+            AND p.last_crawled > NOW() - INTERVAL '7 days'
+          ) THEN 30
+          WHEN EXISTS (
+            SELECT 1 FROM port_scans ps WHERE ps.domain = d.domain
+            AND ps.port IN (80, 443) AND ps.state = 'open'
+          ) THEN 40
+          WHEN EXISTS (
+            SELECT 1 FROM pages p WHERE p.domain_id = d.id
+            AND p.status_code >= 200 AND p.status_code < 400
+          ) THEN 50
+          ELSE 200
+        END as priority,
+        'pending'
+      FROM domains d
+      WHERE d.is_active = true
+      AND (
+        EXISTS (
+          SELECT 1 FROM port_scans ps WHERE ps.domain = d.domain
+          AND ps.port IN (80, 443) AND ps.state = 'open'
+        )
+        OR EXISTS (
+          SELECT 1 FROM pages p WHERE p.domain_id = d.id
+          AND p.status_code >= 200 AND p.status_code < 400
+        )
+      )
+      AND NOT EXISTS (
+        SELECT 1 FROM dirscan_queue dq WHERE dq.domain = d.domain
+      )
+      AND NOT EXISTS (
+        SELECT 1 FROM dirscan_results dr WHERE dr.domain = d.domain
+      )
+      ORDER BY d.last_crawled DESC NULLS LAST
+      LIMIT $1
+      ON CONFLICT (domain) DO NOTHING
+    `;
+    const result = await this.query(queryText, [limit, profile]);
+    return result.rowCount ?? 0;
+  }
+
+  async getDirscannerStatistics(): Promise<{
+    totalScans: number;
+    activeWorkers: number;
+    queueSize: number;
+    interestingFindings: number;
+    recentScans: number;
+  }> {
+    const queries = {
+      totalScans: "SELECT COUNT(*) as count FROM dirscan_queue WHERE status = 'completed'",
+      activeWorkers: "SELECT COUNT(DISTINCT worker_id) as count FROM dirscan_queue WHERE status = 'processing'",
+      queueSize: "SELECT COUNT(*) as count FROM dirscan_queue WHERE status = 'pending'",
+      interestingFindings: 'SELECT COUNT(*) as count FROM dirscan_results WHERE is_interesting = true',
+      recentScans: "SELECT COUNT(DISTINCT domain) as count FROM dirscan_results WHERE scanned_at > NOW() - INTERVAL '1 hour'",
+    };
+
+    const results: Record<string, number> = {};
+    for (const [key, queryText] of Object.entries(queries)) {
+      try {
+        const result = await this.query(queryText);
+        const row = result.rows[0];
+        results[key] = row?.count ? parseInt(row.count, 10) : 0;
+      } catch {
+        results[key] = 0;
+      }
+    }
+
+    return {
+      totalScans: results['totalScans'] ?? 0,
+      activeWorkers: results['activeWorkers'] ?? 0,
+      queueSize: results['queueSize'] ?? 0,
+      interestingFindings: results['interestingFindings'] ?? 0,
+      recentScans: results['recentScans'] ?? 0,
+    };
   }
 }

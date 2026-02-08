@@ -33,6 +33,7 @@ export class PortScanWorker {
   private readonly scanner: TcpScanner;
   private readonly serviceDetector: ServiceDetector;
   private readonly database: Database;
+  private readonly ownsDatabase: boolean;
   private readonly logger: Logger;
   private readonly maxConcurrent: number;
   private readonly minProbeDelay: number;
@@ -40,7 +41,7 @@ export class PortScanWorker {
   private isRunning: boolean;
   private startTime: number | null;
 
-  constructor(workerId: string, options: PortScanWorkerOptions = {}) {
+  constructor(workerId: string, options: PortScanWorkerOptions = {}, sharedDatabase?: Database) {
     this.workerId = workerId;
     this.scanner = new TcpScanner({
       torHost: options.torHost,
@@ -48,7 +49,8 @@ export class PortScanWorker {
       timeout: options.timeout ?? 30000,
     });
     this.serviceDetector = new ServiceDetector();
-    this.database = new Database();
+    this.database = sharedDatabase ?? new Database();
+    this.ownsDatabase = !sharedDatabase;
     this.isRunning = false;
     this.maxConcurrent = options.maxConcurrent ?? 5;
     this.minProbeDelay = options.minProbeDelay ?? 200;
@@ -81,7 +83,9 @@ export class PortScanWorker {
 
   async stop(): Promise<void> {
     this.isRunning = false;
-    await this.database.close();
+    if (this.ownsDatabase) {
+      await this.database.close();
+    }
     this.logger.info('Worker shutdown complete');
   }
 
