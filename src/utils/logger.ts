@@ -59,6 +59,29 @@ export function createWorkerLogger(workerId: string): winston.Logger {
   });
 }
 
+export function createDirscanWorkerLogger(workerId: string): winston.Logger {
+  return winston.createLogger({
+    level: 'info',
+    format: winston.format.combine(
+      winston.format.timestamp(),
+      winston.format.printf(({ timestamp, level, message, domain, error }) => {
+        const domainTag = domain ? ` [${domain}]` : '';
+        const errorTag = error ? ` ERROR: ${error}` : '';
+        return `${timestamp} ${level.toUpperCase()} [${workerId}]${domainTag} ${message}${errorTag}`;
+      })
+    ),
+    defaultMeta: { workerId },
+    transports: [
+      new winston.transports.Console(),
+      new winston.transports.File({
+        filename: `logs/dirscanner-${workerId}.log`,
+        maxsize: 10485760, // 10MB
+        maxFiles: 5,
+      }),
+    ],
+  });
+}
+
 export function createScannerWorkerLogger(workerId: string): winston.Logger {
   return winston.createLogger({
     level: 'info',

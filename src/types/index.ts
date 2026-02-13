@@ -73,3 +73,15 @@ export type {
   ServiceSignature,
   ScannerStatistics,
 } from './scanner.js';
+
+// Dir scanner types
+export type {
+  DirScanProfile,
+  DirScanQueueStatus,
+  InterestCategory,
+  DirScanResult,
+  DirScanQueueItem,
+  DirScanWorkerOptions,
+  BaselineResponse,
+  DirScannerStatistics,
+} from './dirscanner.js';

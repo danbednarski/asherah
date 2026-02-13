@@ -1,221 +1,182 @@
-# Onion Search Engine
+# Asherah
 
-A commercial-grade search engine for the Tor network, designed for journalists and researchers to discover and analyze onion services.
+A search engine and reconnaissance platform for Tor onion services, built for journalists and security researchers.
+
+<!-- ![Screenshot](docs/screenshot.png) -->
 
 ## Features
 
-- **Concurrent Crawling**: 10 simultaneous workers for efficient data collection
-- **Intelligent Link Extraction**: Finds and validates onion domains (56-character addresses)
-- **Content Analysis**: Extracts clean text, metadata, and link relationships
-- **PostgreSQL Storage**: Robust database schema for domains, pages, links, and headers
-- **Priority Queue**: Base domains prioritized over paths for comprehensive coverage
-- **Real-time Statistics**: Monitor crawl progress and database growth
-- **Tor Integration**: DNS resolution through Tor for complete anonymity
+- **Web Crawler** - Concurrent workers discover and index onion services, extracting content, metadata, and link relationships
+- **Port Scanner** - TCP port scanning through Tor with service detection (HTTP, SSH, FTP, SMTP, and more)
+- **Directory Scanner** - Brute-force path discovery with response classification and technology-specific profiles
+- **Search API** - Full-text search with filters for titles, headers, ports, and paths, served through a web UI
 
 ## Architecture
 
 ```
-┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
-│   Orchestrator  │────│   Worker Pool    │────│   PostgreSQL    │
-│                 │    │   (10 workers)   │    │    Database     │
-└─────────────────┘    └──────────────────┘    └─────────────────┘
-         │                       │                       │
-         │              ┌─────────────────┐              │
-         └──────────────│   Tor Proxy     │──────────────┘
-                        │   (SOCKS5H)     │
-                        └─────────────────┘
+                          ┌──────────────────────────────────────┐
+                          │            PostgreSQL DB             │
+                          └──────┬───────┬───────┬───────┬──────┘
+                                 │       │       │       │
+                    ┌────────────┘       │       │       └────────────┐
+                    │                    │       │                    │
+             ┌──────┴──────┐   ┌────────┴──┐ ┌─┴────────┐   ┌──────┴──────┐
+             │   Crawler   │   │   Port    │ │    Dir    │   │  Search API │
+             │ Orchestrator│   │  Scanner  │ │  Scanner  │   │  (Express)  │
+             └──────┬──────┘   └─────┬────┘ └────┬──────┘   └─────────────┘
+                    │                │            │
+              ┌─────┴─────┐   ┌─────┴─────┐ ┌───┴───────┐
+              │  Workers   │   │  Workers  │ │  Workers  │
+              │  (N=10)    │   │  (N=3)    │ │  (N=3)    │
+              └─────┬──────┘   └─────┬────┘ └────┬──────┘
+                    │                │            │
+                    └────────┬───────┘            │
+                             │                    │
+                      ┌──────┴──────┐             │
+                      │  Tor SOCKS5 ├─────────────┘
+                      │  (localhost) │
+                      └─────────────┘
 ```
 
 ## Prerequisites
 
-1. **PostgreSQL** (version 12+)
-2. **Node.js** (version 18+) 
-3. **Tor** daemon or browser running on localhost:9050
+- **PostgreSQL** 12+
+- **Node.js** 18+
+- **Tor** daemon running on `localhost:9050`
 
 ## Installation
 
 ```bash
-# Clone and install dependencies
-npm install
+# Clone the repository
+git clone git@github.com:danbednarski/asherah.git
+cd asherah
 
-# Create database
-createdb onion_search
+# Install dependencies
+npm install
 
 # Copy environment configuration
 cp .env.example .env
 # Edit .env with your database credentials
 
-# Initialize database schema
+# Create and initialize the database
+createdb onion_search
 psql onion_search < schema.sql
+psql onion_search < schema-scanner.sql
+psql onion_search < schema-dirscanner.sql
+psql onion_search < domain-locks.sql
+psql onion_search < domain-reliability.sql
+psql onion_search < sql/combined-lock-status.sql
+
+# Build
+npm run build
 ```
+
+## Configuration
+
+All configuration is via environment variables (see `.env.example`):
+
+| Variable | Default | Description |
+|---|---|---|
+| `DB_HOST` | `localhost` | PostgreSQL host |
+| `DB_PORT` | `5432` | PostgreSQL port |
+| `DB_NAME` | `onion_search` | Database name |
+| `DB_USER` | `postgres` | Database user |
+| `DB_PASSWORD` | | Database password |
+| `TOR_HOST` | `127.0.0.1` | Tor SOCKS5 proxy host |
+| `TOR_PORT` | `9050` | Tor SOCKS5 proxy port |
+| `WORKER_COUNT` | `10` | Number of concurrent crawler workers |
+| `CRAWL_DELAY` | `2000` | Delay between requests (ms) |
+| `REQUEST_TIMEOUT` | `45000` | Request timeout (ms) |
+| `MAX_CONTENT_SIZE` | `1048576` | Max page size in bytes |
+| `LOG_LEVEL` | `info` | Logging verbosity |
 
 ## Usage
 
-### Basic Crawling
+### Run everything at once
 
 ```bash
 npm start
 ```
 
-The engine will:
-1. Initialize the database schema
-2. Add seed URL to crawl queue
-3. Start 10 concurrent workers
-4. Begin discovering and crawling onion links
-5. Store all data in PostgreSQL
+### Run subsystems individually
 
-### Programmatic Usage
+```bash
+# Web crawler
+npm run start:crawler
 
-```javascript
-const { OnionSearchEngine } = require('./index');
+# Port scanner
+npm run start:scanner
 
-const engine = new OnionSearchEngine({
-    workerCount: 10,
-    database: {
-        host: 'localhost',
-        database: 'onion_search',
-        user: 'postgres',
-        password: 'your_password'
-    }
-});
+# Directory scanner
+npm run start:dirscanner
 
-await engine.initialize();
-await engine.addSeedUrls(['http://example.onion/']);
-await engine.start();
-
-// Search functionality
-const results = await engine.getSearchResults('marketplace');
+# Search API (default port 3000)
+npm run start:api
 ```
+
+### Development mode (tsx, no build step)
+
+```bash
+npm run crawler:dev
+npm run scanner:dev
+npm run dirscanner:dev
+npm run api:dev
+```
+
+## Search API
+
+The API serves a web interface at `http://localhost:3000` with the following endpoints:
+
+| Endpoint | Description |
+|---|---|
+| `GET /` | Web UI with search form and results |
+| `GET /search?q=...` | JSON search results |
+| `GET /stats` | Crawler statistics |
+| `GET /domain/:domain` | Domain detail page |
+
+### Search query syntax
+
+Queries support special filters that can be combined with free text:
+
+| Filter | Example | Description |
+|---|---|---|
+| `title:` | `title:marketplace` | Match page titles |
+| `http:` | `http:X-Powered-By` | Match HTTP response headers |
+| `port:` | `port:22` | Filter by open port |
+| `path:` | `path:/admin` | Filter by discovered path |
+
+Example: `title:forum port:22` finds sites with "forum" in the title that have SSH open.
 
 ## Database Schema
 
-### Core Tables
+The database is split across three schema files:
 
-- **domains**: Unique onion domains with metadata
-- **pages**: Individual URLs with content and metadata
-- **links**: Relationship mapping between pages
-- **headers**: HTTP response headers
-- **crawl_queue**: Priority queue for URLs to crawl
-- **crawl_logs**: Detailed crawl history and performance
+- **`schema.sql`** - Crawler tables: `domains`, `pages`, `links`, `headers`, `crawl_queue`, `crawl_logs`
+- **`schema-scanner.sql`** - Port scanner tables: `scan_queue`, `scan_results`, `service_detections`
+- **`schema-dirscanner.sql`** - Directory scanner tables: `dirscan_queue`, `dirscan_results`
+- **`domain-locks.sql`** / **`domain-reliability.sql`** - Advisory locking and reliability tracking
+- **`sql/combined-lock-status.sql`** - Optimized combined lock+status SQL functions
 
-### Key Features
+## Project Structure
 
-- Automatic domain extraction and validation
-- Base domain prioritization (domain.onion/ > domain.onion/path)
-- Duplicate URL handling with conflict resolution
-- Performance indexes for search and analytics
-
-## Data Collected
-
-### Per Page
-- Clean text content (HTML stripped)
-- Page title and meta description
-- H1 tags and language detection
-- HTTP headers and status codes
-- Response time and content length
-
-### Per Link
-- Source and target URLs
-- Anchor text and position
-- Link classification (internal/external/onion)
-- Onion domain validation
-
-### Analytics
-- Crawl success/failure rates
-- Domain discovery metrics
-- Worker performance statistics
-- Queue depth and processing speed
-
-## Commercial Features
-
-### Search API
-```javascript
-// Full-text search across all content
-const results = await engine.getSearchResults('query', {
-    limit: 50,
-    offset: 0
-});
-
-// Domain-specific information
-const domainInfo = await engine.getDomainInfo('example.onion');
+```
+src/
+├── api/                  # Express search API and HTML templates
+├── crawler/              # Web crawler worker
+├── database/             # Database class, write buffer, queue manager
+├── dirscanner/           # Directory scanner worker and path profiles
+├── extraction/           # HTML content and link extraction
+├── scanner/              # Port scanner, TCP scanner, service detection
+├── schemas/              # Zod validation schemas
+├── tor/                  # Tor SOCKS5 client configuration
+├── types/                # TypeScript type definitions
+├── utils/                # Logger, delay, domain utilities
+├── index.ts              # Crawler orchestrator
+├── scanner-orchestrator.ts
+├── dirscanner-orchestrator.ts
+└── api-server.ts         # API entry point
 ```
 
-### Data Export
-```javascript
-// Export crawl data and statistics
-const exportData = await engine.exportData('json');
-```
+## License
 
-### Monitoring
-- Real-time statistics every 30 seconds
-- Worker health monitoring
-- Database performance metrics
-- Crawl queue depth tracking
-
-## Configuration
-
-### Environment Variables
-
-- `DB_*`: PostgreSQL connection settings
-- `TOR_*`: Tor proxy configuration  
-- `WORKER_COUNT`: Number of concurrent crawlers
-- `CRAWL_DELAY`: Delay between requests (ms)
-- `LOG_LEVEL`: Logging verbosity
-
-### Worker Options
-
-```javascript
-{
-    workerCount: 10,           // Concurrent workers
-    timeout: 85000,            // Request timeout (ms)
-    retryAttempts: 2,          // Failed request retries
-    crawlDelay: 2000,          // Delay between crawls (ms)
-    maxContentSize: 2048576,   // Max page size (1MB)
-    logLevel: 'info'           // Logging level
-}
-```
-
-## Logging
-
-Structured logging with Winston:
-- `logs/orchestrator.log`: Main engine logs
-- `logs/crawler-{worker-id}.log`: Individual worker logs
-- Console output for real-time monitoring
-
-## Security & Ethics
-
-- DNS resolution through Tor for anonymity
-- Respects robots.txt when present
-- Rate limiting to avoid overloading services
-- No credential storage or sensitive data logging
-- Designed for defensive research and journalism
-
-## Performance
-
-- **Throughput**: ~50-100 pages/minute (depends on network/content)
-- **Concurrency**: 10 workers with intelligent queue management
-- **Storage**: Optimized PostgreSQL schema with proper indexing
-- **Memory**: ~100-200MB for worker pool + database connections
-- **Scalability**: Horizontal scaling via additional worker processes
-
-## Troubleshooting
-
-### Common Issues
-
-1. **"Tor is not running"**: Start Tor daemon on localhost:9050
-2. **Database connection errors**: Check PostgreSQL service and credentials
-3. **"getaddrinfo ENOTFOUND"**: DNS not going through Tor (check socks5h://)
-4. **Worker crashes**: Check logs for specific error details
-
-### Monitoring Commands
-
-```bash
-# Check queue depth
-psql onion_search -c "SELECT status, COUNT(*) FROM crawl_queue GROUP BY status;"
-
-# View recent crawls
-psql onion_search -c "SELECT url, status, crawled_at FROM crawl_logs ORDER BY crawled_at DESC LIMIT 10;"
-
-# Worker statistics
-tail -f logs/orchestrator.log
-```
+MIT

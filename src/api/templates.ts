@@ -131,12 +131,22 @@ export function createHeaderSnippet(
   for (const header of headers) {
     let matches = false;
 
-    if (searchHeader && header.name.toLowerCase().includes(searchHeader)) {
-      matches = true;
-    }
-
-    if (searchValue && header.value.toLowerCase().includes(searchValue)) {
-      matches = true;
+    if (searchHeader && searchValue) {
+      // Specific header:value search — match name AND value
+      if (header.name.toLowerCase().includes(searchHeader) &&
+          header.value.toLowerCase().includes(searchValue)) {
+        matches = true;
+      }
+    } else if (searchHeader) {
+      // No colon — search both names and values
+      if (header.name.toLowerCase().includes(searchHeader) ||
+          header.value.toLowerCase().includes(searchHeader)) {
+        matches = true;
+      }
+    } else if (searchValue) {
+      if (header.value.toLowerCase().includes(searchValue)) {
+        matches = true;
+      }
     }
 
     if (matches) {
@@ -201,7 +211,7 @@ export function renderSearchResults(
   }
 
   for (const result of searchResults) {
-    const effectiveParsedQuery = parsedQuery ?? { text: null, header: null, value: null, title: null, port: null };
+    const effectiveParsedQuery = parsedQuery ?? { text: null, header: null, value: null, title: null, port: null, path: null };
     let displayContent = result.content_text
       ? findBestSnippet(result.content_text, effectiveParsedQuery)
       : 'No content available';

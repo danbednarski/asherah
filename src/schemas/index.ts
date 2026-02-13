@@ -77,3 +77,18 @@ export {
   type DetectedServiceRow,
   type PortScanSummary,
 } from './scanner.js';
+
+// Dir scanner schemas
+export {
+  DirScanProfileSchema,
+  DirScanQueueStatusSchema,
+  InterestCategorySchema,
+  DirScanQueueItemSchema,
+  DirScanResultRowSchema,
+  DirScanLockResultSchema,
+  DirScanReleaseResultSchema,
+  DirScanExtendResultSchema,
+  DirScannerStatisticsRowSchema,
+  type DirScanQueueItemRow,
+  type DirScanResultRow,
+} from './dirscanner.js';

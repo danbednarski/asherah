@@ -55,7 +55,7 @@ export class ScannerOrchestrator {
     console.log('========================================\n');
 
     // Populate scan queue from existing domains
-    const queuedCount = await this.database.populateScanQueueFromDomains(5000, 'standard');
+    const queuedCount = await this.database.populateScanQueueFromDomains(5000, 'full');
     if (queuedCount > 0) {
       console.log(`Queued ${queuedCount} existing domains for scanning\n`);
     }

@@ -16,7 +16,7 @@ This skill provides comprehensive documentation for the Asherah Tor web crawler 
 
 ```
 ┌─────────────────────────────────────────────────┐
-│           OnionSearchEngine (index.js)          │
+│           OnionSearchEngine (index.ts)          │
 │              Main Orchestrator                   │
 └──────────────┬──────────────────────────────────┘
                │
@@ -33,7 +33,29 @@ This skill provides comprehensive documentation for the Asherah Tor web crawler 
          ▼                    │  - crawl_logs    │
 ┌──────────────────┐          │  - domain_locks  │
 │   Tor Network    │          └──────────────────┘
-│  (SOCKS5H:9050)  │
+│  (SOCKS5H:9050)  │                  ▲
+└──────────────────┘                  │
+                                      │
+┌─────────────────────────────────────┴───────────┐
+│         ScannerOrchestrator (scanner-orchestrator.ts)
+│              Port Scanner                        │
+└──────────────┬──────────────────────────────────┘
+               │
+        ┌──────┴──────────────────────────┐
+        ▼                                 ▼
+┌──────────────────┐          ┌──────────────────┐
+│ PortScanWorkers  │          │  Scanner Tables  │
+│   (3 workers)    │          │  - scan_queue    │
+│                  │          │  - port_scans    │
+│  TorPortScanner  │          │  - detected_     │
+│  ServiceDetector │          │    services      │
+└────────┬─────────┘          │  - scan_locks    │
+         │                    └──────────────────┘
+         ▼
+┌──────────────────┐
+│   Tor Network    │
+│   (SOCKS5:9050)  │
+│   Raw TCP/IP     │
 └──────────────────┘
 ```
 
@@ -53,6 +75,12 @@ This skill provides comprehensive documentation for the Asherah Tor web crawler 
 | `schema.sql` | Main database schema |
 | `domain-locks.sql` | Domain locking mechanism |
 | `domain-reliability.sql` | Domain reliability tracking |
+| `schema-scanner.sql` | Port scanner database schema |
+| `src/scanner/tcp-scanner.ts` | SOCKS5 TCP port scanning |
+| `src/scanner/worker.ts` | Port scan worker class |
+| `src/scanner/service-detector.ts` | Banner analysis and service ID |
+| `src/scanner/port-profiles.ts` | Port sets (quick/standard/full/crypto) |
+| `src/scanner-orchestrator.ts` | Scanner main orchestrator |
 
 ## Core Components
 
@@ -162,7 +190,8 @@ REQUEST_TIMEOUT=45000
 - Standard text: `bitcoin`
 - Title search: `title:"marketplace"`
 - Header search: `http:"Server: nginx"`
-- Combined: `bitcoin title:"marketplace"`
+- Port filter: `port:22` (only domains with port 22 open)
+- Combined: `bitcoin title:"marketplace" port:80`
 
 ## Running the Crawler
 
@@ -253,3 +282,80 @@ On SIGINT:
 4. Close worker processes
 5. Drain database pool
 6. Exit cleanly
+
+## Port Scanner
+
+The port scanner provides Shodan-like service discovery for onion domains.
+
+### Running the Scanner
+
+```bash
+# Development mode
+npm run scanner:dev
+
+# Production
+npm run build && npm run scanner
+
+# With environment variables
+SCANNER_WORKERS=5 TOR_HOST=127.0.0.1 TOR_PORT=9050 npm run scanner
+```
+
+### Scanner Architecture
+
+1. **ScannerOrchestrator** - Spawns workers, populates queue, reports stats
+2. **PortScanWorker** - Processes scan queue, acquires domain locks
+3. **TorPortScanner** - Raw TCP through SOCKS5 (not HTTP)
+4. **ServiceDetector** - Banner analysis and service identification
+
+### Scan Profiles
+
+| Profile | Ports | Use Case |
+|---------|-------|----------|
+| quick | 5 | Fast discovery |
+| standard | 25+ | General purpose (default) |
+| full | 100+ | Security assessment |
+| crypto | 30+ | Cryptocurrency nodes |
+
+### Auto-Queue Integration
+
+- Crawler auto-queues new domains for port scanning
+- Scanner prioritizes recently-crawled domains (more likely to be online)
+- Priority: 10 (24h) → 30 (week) → 50 (month) → 100 (older) → 200 (never crawled)
+
+### Service Detection
+
+Detects: SSH, HTTP, nginx, Apache, MySQL, PostgreSQL, Redis, MongoDB, FTP, SMTP, IRC, Bitcoin, Ethereum, Monero, VNC, Telnet, IMAP, POP3, Tor Control, SOCKS
+
+### Scanner Monitoring
+
+```bash
+# Queue status
+psql onion_search -c "SELECT status, COUNT(*) FROM scan_queue GROUP BY status;"
+
+# Open ports found
+psql onion_search -c "SELECT port, COUNT(*) FROM port_scans WHERE state='open' GROUP BY port ORDER BY count DESC;"
+
+# Detected services
+psql onion_search -c "SELECT service_name, COUNT(*) FROM detected_services GROUP BY service_name ORDER BY count DESC;"
+
+# Live output
+tail -f logs/scanner-orchestrator.log
+```
+
+### Vulnerability Analysis
+
+Query for potentially vulnerable services:
+
+```sql
+-- Old PHP versions
+SELECT domain, raw_banner FROM detected_services
+WHERE raw_banner ILIKE '%PHP/5.%' OR raw_banner ILIKE '%PHP/7.0%';
+
+-- Old OpenSSL (Heartbleed)
+SELECT domain, raw_banner FROM detected_services
+WHERE raw_banner ILIKE '%OpenSSL/1.0.1%';
+
+-- Old SSH
+SELECT domain, service_version FROM detected_services
+WHERE service_name = 'ssh' AND service_version LIKE 'OpenSSH_5%';
+```

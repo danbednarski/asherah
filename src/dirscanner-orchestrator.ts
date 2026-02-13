@@ -54,7 +54,7 @@ export class DirScannerOrchestrator {
     console.log('========================================\n');
 
     // Populate dirscan queue from domains with confirmed HTTP
-    const queuedCount = await this.database.populateDirscanQueueFromDomains(5000, 'standard');
+    const queuedCount = await this.database.populateDirscanQueueFromDomains(5000, 'full');
     if (queuedCount > 0) {
       console.log(`Queued ${queuedCount} domains for directory scanning\n`);
     }

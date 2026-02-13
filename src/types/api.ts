@@ -11,6 +11,7 @@ export interface ParsedQuery {
   value: string | null;
   title: string | null;
   port: number | null;
+  path: string | null;
 }
 
 export interface PaginationOptions {

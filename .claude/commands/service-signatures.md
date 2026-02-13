@@ -69,6 +69,45 @@ Server: nginx/1.18.0
 **Banner:** `220[\s-].*SMTP` or `ESMTP`
 **Pattern:** `Postfix`, `Sendmail`
 
+## IRC
+**Ports:** 6666, 6667, 6668, 6669, 6697, 7000
+**Patterns:**
+- `:.*NOTICE` (server notices)
+- `NOTICE AUTH` (auth check)
+- `Welcome to.*IRC`
+- `Looking up your hostname`
+- `UnrealIRCd`, `InspIRCd`, `ngircd`
+**Version:** `/UnrealIRCd[- ]([\d.]+)|InspIRCd[- ]([\d.]+)/i`
+
+Example banner:
+```
+:server NOTICE AUTH :*** Looking up your hostname...
+```
+
+## IMAP
+**Ports:** 143, 993
+**Banner:** `* OK.*IMAP`
+**Pattern:** `CAPABILITY IMAP`, `Dovecot`, `Cyrus`
+
+## POP3
+**Ports:** 110, 995
+**Banner:** `+OK`
+**Pattern:** `POP3`, `Dovecot`
+
+## VNC
+**Ports:** 5900, 5901
+**Banner:** `RFB` (Remote Framebuffer)
+**Version:** `/RFB\s+([\d.]+)/i`
+
+## Telnet
+**Ports:** 23
+**Patterns:** `\xff\xfd`, `\xff\xfb` (telnet negotiation), `login:`, `username:`
+
+## Elasticsearch
+**Ports:** 9200, 9300
+**Patterns:** `elasticsearch`, `cluster_name`, `lucene_version`
+**Version:** `/"number"\s*:\s*"([\d.]+)"/i`
+
 ## Adding Custom Signatures
 
 Edit `src/scanner/service-detector.ts`:

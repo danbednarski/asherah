@@ -924,7 +924,7 @@ export class Database {
 
   async addToScanQueue(
     domain: string,
-    profile: string = 'standard',
+    profile: string = 'full',
     ports: number[] | null = null,
     priority: number = 100
   ): Promise<void> {
@@ -1022,7 +1022,7 @@ export class Database {
 
   async populateScanQueueFromDomains(
     limit: number = 1000,
-    profile: string = 'standard'
+    profile: string = 'full'
   ): Promise<number> {
     // Add active domains that haven't been scanned yet to the scan queue
     // Prioritize by recency of successful HTTP responses
@@ -1077,7 +1077,7 @@ export class Database {
     // Quick insert - used when crawler discovers new domains
     const queryText = `
       INSERT INTO scan_queue (domain, profile, priority, status)
-      VALUES ($1, 'standard', $2, 'pending')
+      VALUES ($1, 'full', $2, 'pending')
       ON CONFLICT (domain) DO NOTHING
     `;
     await this.query(queryText, [domain, priority]);
@@ -1237,7 +1237,7 @@ export class Database {
 
   async populateDirscanQueueFromDomains(
     limit: number = 1000,
-    profile: string = 'standard'
+    profile: string = 'full'
   ): Promise<number> {
     // Only queue domains that have confirmed HTTP access:
     // - Open port 80 or 443 in port_scans

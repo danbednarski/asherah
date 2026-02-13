@@ -68,7 +68,8 @@ export class OnionSearchAPI {
             parsedQuery.title,
             limit,
             offset,
-            parsedQuery.port
+            parsedQuery.port,
+            parsedQuery.path
           );
           searchResults = dbResults as SearchResult[];
         }
@@ -166,6 +167,7 @@ export class OnionSearchAPI {
       value: null,
       title: null,
       port: null,
+      path: null,
     };
 
     let remainingQuery = query;
@@ -199,6 +201,13 @@ export class OnionSearchAPI {
         result.port = portNum;
       }
       remainingQuery = remainingQuery.replace(/port:\s*\d+/i, '').trim();
+    }
+
+    // Parse path:"..." syntax (for dirscan results)
+    const pathMatch = remainingQuery.match(/path:\s*"([^"]+)"/i);
+    if (pathMatch) {
+      result.path = pathMatch[1].trim();
+      remainingQuery = remainingQuery.replace(/path:\s*"[^"]+"/i, '').trim();
     }
 
     if (remainingQuery) {
@@ -242,7 +251,8 @@ export class OnionSearchAPI {
         console.log('🔍 Search examples:');
         console.log('  "bitcoin" - search text content');
         console.log('  "http:\\"server: nginx\\"" - search HTTP headers');
-        console.log('  "marketplace http:\\"content-type: text\\"" - combined search');
+        console.log('  "port:22" - domains with open port');
+        console.log('  "path:\\".env\\"" - domains with interesting path findings');
         resolve();
       });
     });

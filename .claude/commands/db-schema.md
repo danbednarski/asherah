@@ -4,6 +4,7 @@ This skill provides the complete database schema for the Asherah crawler.
 
 ## Tables Overview
 
+### Crawler Tables
 | Table | Purpose | Key Columns |
 |-------|---------|-------------|
 | `domains` | Discovered onion domains | domain, title, crawl_status |
@@ -13,6 +14,14 @@ This skill provides the complete database schema for the Asherah crawler.
 | `crawl_queue` | URL processing queue | url, priority, status |
 | `crawl_logs` | Crawl attempt history | url, status, error_message |
 | `domain_locks` | Concurrent access control | domain, worker_id, expires_at |
+
+### Scanner Tables
+| Table | Purpose | Key Columns |
+|-------|---------|-------------|
+| `scan_queue` | Port scan job queue | domain, profile, ports, priority, status |
+| `port_scans` | Port scan results | domain, port, state, banner |
+| `detected_services` | Identified services | domain, port, service_name, service_version |
+| `scan_locks` | Scanner concurrency control | domain, worker_id, expires_at |
 
 ## Detailed Schema
 
@@ -179,6 +188,79 @@ Releases a domain lock owned by the worker.
 ### extend_domain_lock(domain, worker_id, minutes)
 Extends an existing lock's expiration time.
 
+## Scanner Tables Schema
+
+### scan_queue
+```sql
+CREATE TABLE scan_queue (
+    id SERIAL PRIMARY KEY,
+    domain_id INTEGER REFERENCES domains(id) ON DELETE CASCADE,
+    domain VARCHAR(62) NOT NULL,
+    profile VARCHAR(50) DEFAULT 'standard',
+    ports INTEGER[],                          -- NULL = use profile defaults
+    priority INTEGER DEFAULT 100,             -- Lower = higher priority
+    status VARCHAR(20) DEFAULT 'pending',     -- pending/in_progress/completed/failed
+    worker_id VARCHAR(50),
+    attempts INTEGER DEFAULT 0,
+    last_attempt TIMESTAMP,
+    error_message TEXT,
+    created_at TIMESTAMP DEFAULT NOW(),
+    completed_at TIMESTAMP
+);
+```
+
+### port_scans
+```sql
+CREATE TABLE port_scans (
+    id SERIAL PRIMARY KEY,
+    domain_id INTEGER REFERENCES domains(id) ON DELETE CASCADE,
+    domain VARCHAR(62) NOT NULL,
+    port INTEGER NOT NULL,
+    state VARCHAR(20) NOT NULL,               -- open/closed/filtered/timeout
+    response_time_ms INTEGER,
+    banner TEXT,                              -- Raw banner (max 4KB)
+    scanned_at TIMESTAMP DEFAULT NOW(),
+    UNIQUE(domain, port)
+);
+```
+
+### detected_services
+```sql
+CREATE TABLE detected_services (
+    id SERIAL PRIMARY KEY,
+    port_scan_id INTEGER REFERENCES port_scans(id) ON DELETE CASCADE,
+    domain VARCHAR(62) NOT NULL,
+    port INTEGER NOT NULL,
+    service_name VARCHAR(100),                -- ssh, http, mysql, etc.
+    service_version VARCHAR(100),             -- Extracted version string
+    confidence INTEGER,                       -- 0-100
+    raw_banner TEXT,
+    first_seen TIMESTAMP DEFAULT NOW(),
+    last_seen TIMESTAMP DEFAULT NOW()
+);
+```
+
+### scan_locks
+```sql
+CREATE TABLE scan_locks (
+    domain VARCHAR(62) PRIMARY KEY,
+    worker_id VARCHAR(50) NOT NULL,
+    locked_at TIMESTAMP DEFAULT NOW(),
+    expires_at TIMESTAMP DEFAULT NOW() + INTERVAL '30 minutes'
+);
+```
+
+## Scanner Functions
+
+### acquire_scan_lock(domain, worker_id)
+Atomically acquires a scan lock, returns success boolean.
+
+### release_scan_lock(domain, worker_id)
+Releases a scan lock owned by the worker.
+
+### extend_scan_lock(domain, worker_id, minutes)
+Extends an existing lock's expiration time.
+
 ## Common Queries
 
 ```sql
@@ -204,4 +286,28 @@ ORDER BY pages DESC;
 SELECT status, COUNT(*), AVG(attempts) as avg_attempts
 FROM crawl_queue
 GROUP BY status;
+
+-- Scanner: Open ports by frequency
+SELECT port, COUNT(*) as count
+FROM port_scans WHERE state = 'open'
+GROUP BY port ORDER BY count DESC;
+
+-- Scanner: Services detected
+SELECT service_name, service_version, COUNT(*) as count
+FROM detected_services
+GROUP BY service_name, service_version
+ORDER BY count DESC;
+
+-- Scanner: Domains with specific port open
+SELECT DISTINCT domain FROM port_scans
+WHERE port = 22 AND state = 'open';
+
+-- Scanner: Vulnerable services (old PHP)
+SELECT domain, port, raw_banner
+FROM detected_services
+WHERE raw_banner ILIKE '%PHP/5.%';
+
+-- Scanner: Queue health
+SELECT status, COUNT(*), AVG(attempts) as avg_attempts
+FROM scan_queue GROUP BY status;
 ```
